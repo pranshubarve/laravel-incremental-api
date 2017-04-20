@@ -16,8 +16,7 @@ class CategoryController extends ApiController
      */
     public function index()
     {
-        Category::all();
-
+        return Category::all();
     }
 
     /**
