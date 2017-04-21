@@ -3,12 +3,35 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\ApiController;
-use App\Models\Category;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryStore;
+use App\Http\Requests\CategoryUpdate;
+use App\Models\Category;
+use App\Phoenix\Transformers\CategoryTransformer;
+// use Illuminate\Http\Request;
+use Response;
+use Log;
 
+/**
+ * Class CategoryController
+ * @package App\Http\Controllers\Api
+ */
 class CategoryController extends ApiController
 {
+    /**
+     * @var CategoryTransformer
+     */
+    protected $categoryTransformer;
+
+    /**
+     * CategoryController constructor.
+     * @param CategoryTransformer $categoryTransformer
+     */
+    public function __construct(CategoryTransformer $categoryTransformer)
+    {
+        $this->categoryTransformer = $categoryTransformer;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +39,8 @@ class CategoryController extends ApiController
      */
     public function index()
     {
-        return Category::all();
+        $category = Category::all();
+        return $this->respond(['data' => $this->categoryTransformer->transformCollection($category->all())]);
     }
 
     /**
@@ -26,18 +50,37 @@ class CategoryController extends ApiController
      */
     public function create()
     {
-        //
+        return $this->respondNotFound('Method Not Exists!');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store Category
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param CategoryStore $request
+     * @return mixed
      */
-    public function store(Request $request)
+    public function store(CategoryStore $request)
     {
-        //
+        try {
+            $category = Category::create($this->makeSaveArray($request));
+            return $this->respondCreated('Category successfully created.', $this->categoryTransformer->transform($category));
+        } catch (\Exception $e) {
+            \Log::info($e);
+            return $this->respondInternalError('Internal Server Error!');
+        }
+    }
+
+    /**
+     * @param $request
+     * @return array
+     */
+    public function makeSaveArray($request)
+    {
+        return $requests = [
+            'title' => $request->get('title'),
+            'description' => $request->get('description'),
+            'status' => $request->get('status'),
+        ];
     }
 
     /**
@@ -48,7 +91,12 @@ class CategoryController extends ApiController
      */
     public function show($id)
     {
-        //
+        $category = Category::find($id);
+
+        if(!$category) {
+            return $this->respondNotFound('Category does not exist.');
+        }
+        return $this->respond(['data' => $this->categoryTransformer->transform($category)]);
     }
 
     /**
@@ -59,17 +107,16 @@ class CategoryController extends ApiController
      */
     public function edit($id)
     {
-        //
+        return $this->respondNotFound('Method Not Exists!');
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param CategoryUpdate $request
+     * @param $id
      */
-    public function update(Request $request, $id)
+    public function update(CategoryUpdate $request, $id)
     {
         //
     }
