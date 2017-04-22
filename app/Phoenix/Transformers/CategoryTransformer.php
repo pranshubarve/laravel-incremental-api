@@ -1,6 +1,10 @@
 <?php
 namespace App\Phoenix\Transformers;
 
+/**
+ * Class CategoryTransformer
+ * @package App\Phoenix\Transformers
+ */
 class CategoryTransformer extends Transformer {
 
     /**

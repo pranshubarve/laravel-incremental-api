@@ -3,8 +3,14 @@
 use Illuminate\Database\Seeder;
 use DB;
 
+/**
+ * Class DatabaseSeeder
+ */
 class DatabaseSeeder extends Seeder
 {
+    /**
+     * @var array
+     */
     private $tables  =  [
         'users',
         'categories'
@@ -23,6 +29,9 @@ class DatabaseSeeder extends Seeder
         $this->call(CategoriesTableSeeder::class);
     }
 
+    /**
+     *
+     */
     private function cleanDatabase()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0');

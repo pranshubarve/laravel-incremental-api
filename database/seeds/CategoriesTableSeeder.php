@@ -4,6 +4,9 @@ use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 use App\Models\Category;
 
+/**
+ * Class CategoriesTableSeeder
+ */
 class CategoriesTableSeeder extends Seeder
 {
     /**

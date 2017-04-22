@@ -1,6 +1,10 @@
 <?php
 namespace App\Phoenix\Transformers;
 
+/**
+ * Class Transformer
+ * @package App\Phoenix\Transformers
+ */
 abstract class Transformer {
 
     /**
